@@ -43,7 +43,7 @@ export default function App() {
           </p>
         </div>
         <div style={styles.heroBadges}>
-          <ApiPill name="Gemini 1.5 Flash" tag="Text + Vision" color="var(--accent2)" />
+          <ApiPill name="Gemini 2.5 Flash" tag="Text + Vision" color="var(--accent2)" />
           <ApiPill name="Pollinations.ai" tag="Image Gen · Free" color="var(--accent)" />
         </div>
       </section>
