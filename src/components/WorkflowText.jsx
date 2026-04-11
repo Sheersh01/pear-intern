@@ -1,26 +1,39 @@
-import React, { useState } from 'react';
-import { Wand2, ImageIcon, RotateCcw, ChevronRight, Sparkles } from 'lucide-react';
-import { getEnhancedPrompt, generateImageFromPrompt } from '../utils/apiHelpers';
-import { STATUS, PLACEHOLDER_PROMPTS } from '../utils/constants';
-import ImageCard from './ImageCard';
+import React, { useState } from "react";
+import {
+  Wand2,
+  ImageIcon,
+  RotateCcw,
+  ChevronRight,
+  Sparkles,
+} from "lucide-react";
+import {
+  getEnhancedPrompt,
+  generateImageFromPrompt,
+} from "../utils/apiHelpers";
+import { STATUS, PLACEHOLDER_PROMPTS } from "../utils/constants";
+import ImageCard from "./ImageCard";
 
-const placeholder = PLACEHOLDER_PROMPTS[Math.floor(Math.random() * PLACEHOLDER_PROMPTS.length)];
+const placeholder =
+  PLACEHOLDER_PROMPTS[Math.floor(Math.random() * PLACEHOLDER_PROMPTS.length)];
 
 export default function WorkflowText() {
-  const [userPrompt, setUserPrompt]         = useState('');
-  const [enhancedPrompt, setEnhancedPrompt] = useState('');
-  const [imageUrl, setImageUrl]             = useState('');
-  const [status, setStatus]                 = useState(STATUS.IDLE);
-  const [error, setError]                   = useState('');
+  const [userPrompt, setUserPrompt] = useState("");
+  const [enhancedPrompt, setEnhancedPrompt] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [status, setStatus] = useState(STATUS.IDLE);
+  const [error, setError] = useState("");
 
   const reset = () => {
-    setUserPrompt(''); setEnhancedPrompt('');
-    setImageUrl(''); setStatus(STATUS.IDLE); setError('');
+    setUserPrompt("");
+    setEnhancedPrompt("");
+    setImageUrl("");
+    setStatus(STATUS.IDLE);
+    setError("");
   };
 
   const handleEnhance = async () => {
     if (!userPrompt.trim()) return;
-    setError('');
+    setError("");
     setStatus(STATUS.ENHANCING);
     try {
       const result = await getEnhancedPrompt(userPrompt);
@@ -34,7 +47,7 @@ export default function WorkflowText() {
 
   const handleGenerate = async () => {
     if (!enhancedPrompt.trim()) return;
-    setError('');
+    setError("");
     setStatus(STATUS.GENERATING);
     try {
       const url = await generateImageFromPrompt(enhancedPrompt);
@@ -46,10 +59,10 @@ export default function WorkflowText() {
     }
   };
 
-  const isEnhancing  = status === STATUS.ENHANCING;
+  const isEnhancing = status === STATUS.ENHANCING;
   const isGenerating = status === STATUS.GENERATING;
-  const isWaiting    = status === STATUS.WAITING;
-  const isDone       = status === STATUS.DONE;
+  const isWaiting = status === STATUS.WAITING;
+  const isDone = status === STATUS.DONE;
 
   return (
     <div style={styles.wrapper}>
@@ -63,7 +76,7 @@ export default function WorkflowText() {
           style={styles.textarea}
           placeholder={`e.g. "${placeholder}"`}
           value={userPrompt}
-          onChange={e => setUserPrompt(e.target.value)}
+          onChange={(e) => setUserPrompt(e.target.value)}
           rows={4}
           disabled={isEnhancing || isGenerating}
         />
@@ -77,10 +90,15 @@ export default function WorkflowText() {
           onClick={handleEnhance}
           disabled={!userPrompt.trim() || isEnhancing || isGenerating}
         >
-          {isEnhancing
-            ? <><Spinner /> Enhancing with AI…</>
-            : <><Wand2 size={16} /> Enhance Prompt</>
-          }
+          {isEnhancing ? (
+            <>
+              <Spinner /> Enhancing with AI…
+            </>
+          ) : (
+            <>
+              <Wand2 size={16} /> Enhance Prompt
+            </>
+          )}
         </button>
 
         {/* Step 2 — Approval */}
@@ -93,7 +111,7 @@ export default function WorkflowText() {
             <textarea
               style={{ ...styles.textarea, ...styles.textareaEnhanced }}
               value={enhancedPrompt}
-              onChange={e => setEnhancedPrompt(e.target.value)}
+              onChange={(e) => setEnhancedPrompt(e.target.value)}
               rows={6}
               disabled={isGenerating}
             />
@@ -107,10 +125,16 @@ export default function WorkflowText() {
               onClick={handleGenerate}
               disabled={isGenerating || !enhancedPrompt.trim()}
             >
-              {isGenerating
-                ? <><Spinner /> Generating image…</>
-                : <><ImageIcon size={16} /> Generate Image <ChevronRight size={14} /></>
-              }
+              {isGenerating ? (
+                <>
+                  <Spinner /> Generating image…
+                </>
+              ) : (
+                <>
+                  <ImageIcon size={16} /> Generate Image{" "}
+                  <ChevronRight size={14} />
+                </>
+              )}
             </button>
           </div>
         )}
@@ -129,8 +153,12 @@ export default function WorkflowText() {
         {isDone && imageUrl ? (
           <div className="animate-fade-up">
             <StepBadge n="03" label="Your generated image" />
-            <div style={{ marginTop: '1rem' }}>
-              <ImageCard imageUrl={imageUrl} label="Creative Studio Output" prompt={enhancedPrompt} />
+            <div style={{ marginTop: "1rem" }}>
+              <ImageCard
+                imageUrl={imageUrl}
+                label="Creative Studio Output"
+                prompt={enhancedPrompt}
+              />
             </div>
           </div>
         ) : (
@@ -143,25 +171,54 @@ export default function WorkflowText() {
 
 function StepBadge({ n, label }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.75rem' }}>
-      <span style={{
-        fontFamily: 'var(--font-mono)', fontSize: '0.65rem', fontWeight: 500,
-        color: 'var(--accent)', background: 'rgba(184,255,87,0.1)',
-        border: '1px solid rgba(184,255,87,0.2)', borderRadius: '4px',
-        padding: '1px 6px',
-      }}>{n}</span>
-      <span style={{ fontSize: '0.8rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>{label}</span>
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "0.6rem",
+        marginBottom: "0.75rem",
+      }}
+    >
+      <span
+        style={{
+          fontFamily: "var(--font-mono)",
+          fontSize: "0.65rem",
+          fontWeight: 500,
+          color: "var(--accent)",
+          background: "rgba(211,173,115,0.1)",
+          border: "1px solid rgba(211,173,115,0.2)",
+          borderRadius: "4px",
+          padding: "1px 6px",
+        }}
+      >
+        {n}
+      </span>
+      <span
+        style={{
+          fontSize: "0.8rem",
+          color: "var(--text-dim)",
+          fontFamily: "var(--font-mono)",
+        }}
+      >
+        {label}
+      </span>
     </div>
   );
 }
 
 function Spinner() {
   return (
-    <span style={{
-      width: 14, height: 14, border: '2px solid rgba(255,255,255,0.2)',
-      borderTopColor: 'currentColor', borderRadius: '50%',
-      display: 'inline-block', animation: 'spin 0.7s linear infinite',
-    }} />
+    <span
+      style={{
+        width: 14,
+        height: 14,
+        border: "2px solid rgba(255,255,255,0.2)",
+        borderTopColor: "currentColor",
+        borderRadius: "50%",
+        display: "inline-block",
+        animation: "spin 0.7s linear infinite",
+      }}
+    />
   );
 }
 
@@ -178,7 +235,9 @@ function EmptyState({ isLoading }) {
         <>
           <Sparkles size={32} color="var(--muted)" />
           <p style={styles.emptyText}>Your image will appear here</p>
-          <p style={styles.emptyHint}>Describe your idea and let AI enhance it</p>
+          <p style={styles.emptyHint}>
+            Describe your idea and let AI enhance it
+          </p>
         </>
       )}
     </div>
@@ -187,114 +246,122 @@ function EmptyState({ isLoading }) {
 
 const styles = {
   wrapper: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: '2rem',
-    alignItems: 'start',
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: "2rem",
+    alignItems: "start",
   },
   panel: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '1rem',
+    display: "flex",
+    flexDirection: "column",
+    gap: "1rem",
   },
-  stepHeader: { marginBottom: '0' },
+  stepHeader: { marginBottom: "0" },
   textarea: {
-    width: '100%',
-    background: 'var(--surface)',
-    border: '1px solid var(--border)',
-    borderRadius: '10px',
-    color: 'var(--text)',
-    fontFamily: 'var(--font-mono)',
-    fontSize: '0.82rem',
+    width: "100%",
+    background: "var(--surface)",
+    border: "1px solid var(--border)",
+    borderRadius: "10px",
+    color: "var(--text)",
+    fontFamily: "var(--font-mono)",
+    fontSize: "0.82rem",
     lineHeight: 1.6,
-    padding: '0.85rem 1rem',
-    resize: 'vertical',
-    outline: 'none',
-    transition: 'border-color 0.2s ease',
+    padding: "0.85rem 1rem",
+    resize: "vertical",
+    outline: "none",
+    transition: "border-color 0.2s ease",
   },
   textareaEnhanced: {
-    borderColor: 'rgba(184,255,87,0.25)',
-    background: 'rgba(184,255,87,0.03)',
+    borderColor: "rgba(211,173,115,0.25)",
+    background: "rgba(211,173,115,0.04)",
   },
   btn: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '0.5rem',
-    padding: '0.65rem 1.25rem',
-    borderRadius: '9px',
-    border: '1px solid var(--border)',
-    background: 'var(--surface)',
-    color: 'var(--text)',
-    fontFamily: 'var(--font-body)',
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "0.5rem",
+    padding: "0.65rem 1.25rem",
+    borderRadius: "9px",
+    border: "1px solid var(--border)",
+    background: "var(--surface)",
+    color: "var(--text)",
+    fontFamily: "var(--font-body)",
     fontWeight: 600,
-    fontSize: '0.875rem',
-    cursor: 'pointer',
-    transition: 'all 0.2s ease',
-    width: '100%',
+    fontSize: "0.875rem",
+    cursor: "pointer",
+    transition: "all 0.2s ease",
+    width: "100%",
   },
   btnAccent: {
-    background: 'var(--accent)',
-    color: '#0a0a0f',
-    border: '1px solid var(--accent)',
+    background: "rgba(211,173,115,0.12)",
+    color: "var(--text)",
+    border: "1px solid rgba(211,173,115,0.28)",
   },
-  btnLoading: { opacity: 0.7, cursor: 'not-allowed' },
+  btnLoading: { opacity: 0.7, cursor: "not-allowed" },
   approvalBlock: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '0.75rem',
-    padding: '1.25rem',
-    background: 'var(--card)',
-    border: '1px solid var(--border)',
-    borderRadius: 'var(--radius)',
+    display: "flex",
+    flexDirection: "column",
+    gap: "0.75rem",
+    padding: "1.25rem",
+    background: "var(--card)",
+    border: "1px solid var(--border)",
+    borderRadius: "var(--radius)",
   },
   hint: {
-    fontSize: '0.75rem',
-    color: 'var(--text-dim)',
-    fontFamily: 'var(--font-mono)',
+    fontSize: "0.75rem",
+    color: "var(--text-dim)",
+    fontFamily: "var(--font-mono)",
   },
   error: {
-    fontSize: '0.78rem',
-    color: '#ff6b6b',
-    fontFamily: 'var(--font-mono)',
-    background: 'rgba(255,107,107,0.08)',
-    border: '1px solid rgba(255,107,107,0.2)',
-    borderRadius: '8px',
-    padding: '0.6rem 0.875rem',
+    fontSize: "0.78rem",
+    color: "#cf7f88",
+    fontFamily: "var(--font-mono)",
+    background: "rgba(207,127,136,0.08)",
+    border: "1px solid rgba(207,127,136,0.2)",
+    borderRadius: "8px",
+    padding: "0.6rem 0.875rem",
   },
   resetBtn: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.4rem',
-    background: 'transparent',
-    border: 'none',
-    color: 'var(--text-dim)',
-    cursor: 'pointer',
-    fontSize: '0.78rem',
-    fontFamily: 'var(--font-mono)',
-    padding: '0.25rem 0',
+    display: "flex",
+    alignItems: "center",
+    gap: "0.4rem",
+    background: "transparent",
+    border: "none",
+    color: "var(--text-dim)",
+    cursor: "pointer",
+    fontSize: "0.78rem",
+    fontFamily: "var(--font-mono)",
+    padding: "0.25rem 0",
   },
-  outputPanel: { position: 'sticky', top: '84px' },
+  outputPanel: { position: "sticky", top: "84px" },
   empty: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '0.75rem',
-    minHeight: '400px',
-    border: '1px dashed var(--border)',
-    borderRadius: 'var(--radius)',
-    textAlign: 'center',
-    padding: '2rem',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "0.75rem",
+    minHeight: "400px",
+    border: "1px dashed var(--border)",
+    borderRadius: "var(--radius)",
+    textAlign: "center",
+    padding: "2rem",
   },
   emptySpinner: {
     width: 40,
     height: 40,
-    border: '3px solid var(--border)',
-    borderTopColor: 'var(--accent)',
-    borderRadius: '50%',
-    animation: 'spin 1s linear infinite',
+    border: "3px solid var(--border)",
+    borderTopColor: "var(--accent)",
+    borderRadius: "50%",
+    animation: "spin 1s linear infinite",
   },
-  emptyText: { color: 'var(--text-dim)', fontFamily: 'var(--font-body)', fontWeight: 500 },
-  emptyHint: { fontSize: '0.78rem', color: 'var(--muted)', fontFamily: 'var(--font-mono)' },
+  emptyText: {
+    color: "var(--text-dim)",
+    fontFamily: "var(--font-body)",
+    fontWeight: 500,
+  },
+  emptyHint: {
+    fontSize: "0.78rem",
+    color: "var(--muted)",
+    fontFamily: "var(--font-mono)",
+  },
 };

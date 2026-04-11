@@ -14,9 +14,9 @@ export default function Navbar({ activeTab, setActiveTab }) {
 
   const quotaColor =
     quota.percentUsed > 80
-      ? "#ff6b6b"
+      ? "#cf7f88"
       : quota.percentUsed > 50
-        ? "#ffc857"
+        ? "#d3ad73"
         : "var(--accent)";
   return (
     <header style={styles.header}>
@@ -79,8 +79,8 @@ const styles = {
     justifyContent: "space-between",
     padding: "0 2rem",
     height: "64px",
-    borderBottom: "1px solid #252535",
-    background: "rgba(10,10,15,0.85)",
+    borderBottom: "1px solid var(--border)",
+    background: "rgba(7,11,18,0.88)",
     backdropFilter: "blur(16px)",
     position: "sticky",
     top: 0,
@@ -99,9 +99,9 @@ const styles = {
   badge: {
     fontSize: "0.6rem",
     fontFamily: "var(--font-mono)",
-    background: "rgba(184,255,87,0.12)",
+    background: "rgba(211,173,115,0.12)",
     color: "var(--accent)",
-    border: "1px solid rgba(184,255,87,0.25)",
+    border: "1px solid rgba(211,173,115,0.22)",
     borderRadius: "99px",
     padding: "2px 8px",
     textTransform: "uppercase",
@@ -124,9 +124,9 @@ const styles = {
     transition: "all 0.2s ease",
   },
   tabActive: {
-    background: "rgba(184,255,87,0.08)",
-    border: "1px solid rgba(184,255,87,0.2)",
-    color: "var(--accent)",
+    background: "rgba(126,147,184,0.12)",
+    border: "1px solid rgba(126,147,184,0.24)",
+    color: "var(--text)",
   },
   tabNum: {
     fontFamily: "var(--font-mono)",
