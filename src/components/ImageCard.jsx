@@ -3,6 +3,7 @@ import { Download, ExternalLink, Copy, Check } from "lucide-react";
 
 export default function ImageCard({ imageUrl, label, prompt }) {
   const [copied, setCopied] = useState(false);
+  const [failed, setFailed] = useState(false);
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(prompt || imageUrl);
@@ -13,7 +14,28 @@ export default function ImageCard({ imageUrl, label, prompt }) {
   return (
     <div style={styles.card} className="animate-fade-up">
       <div style={styles.imageWrap}>
-        <img src={imageUrl} alt={label} style={styles.image} loading="lazy" />
+        {!failed ? (
+          <img
+            src={imageUrl}
+            alt={label}
+            style={styles.image}
+            loading="eager"
+            referrerPolicy="no-referrer"
+            onError={() => setFailed(true)}
+          />
+        ) : (
+          <div style={styles.fallback}>
+            <p style={styles.fallbackTitle}>Image could not be loaded</p>
+            <a
+              href={imageUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={styles.fallbackLink}
+            >
+              Open the generated image directly
+            </a>
+          </div>
+        )}
         <div style={styles.overlay}>
           <a
             href={imageUrl}
@@ -103,6 +125,31 @@ const styles = {
     textDecoration: "none",
     border: "1px solid rgba(255,255,255,0.12)",
     fontFamily: "var(--font-mono)",
+  },
+  fallback: {
+    width: "100%",
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "0.5rem",
+    padding: "1rem",
+    textAlign: "center",
+    color: "var(--text-dim)",
+    background:
+      "linear-gradient(180deg, rgba(12,18,28,0.96), rgba(9,13,20,0.96))",
+  },
+  fallbackTitle: {
+    fontFamily: "var(--font-mono)",
+    fontSize: "0.8rem",
+    color: "var(--text)",
+  },
+  fallbackLink: {
+    fontFamily: "var(--font-mono)",
+    fontSize: "0.72rem",
+    color: "var(--accent)",
+    textDecoration: "none",
   },
   label: {
     padding: "0.6rem 0.75rem 0.25rem",
